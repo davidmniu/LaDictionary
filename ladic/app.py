@@ -1,40 +1,33 @@
 import sys
 import os
-import requests
-import re
 import platform
+import re
+import requests
 
-from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtCore import Qt
+# from PyQt6 import QtCore, QtGui, QtWidgets
+# from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractItemView, QLabel, QFrame
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractItemView
 
-from ladic.dictionary import getData
+from ladic.helper import getData, msgBox, cleanWord, validateWord, writeTeX
 from ladic.ui.window import Ui_MainWindow
 
 from definitions import TEX_PATH, TEX_DIR, PDF_PATH
 
-# quick function to display message boxes
-def msgBox(self, text):
-    box = QMessageBox(self)
-    box.setText(text)
-    box.exec()
+def validateIndices(self):
+    indices = self.defView.selectionModel().selectedIndexes()
+    if not indices:
+        msgBox(self, "Error: must select at least one definition")
+        return
 
-# function to format word from searchEdit
-def cleanWord(word):
-    return word.strip().lower().capitalize()
-
-def writeTeX(text, line):
-    line -= 1
-    inFile = open(TEX_PATH, 'r')
-    outFile = open(TEX_DIR + "~dictionary.tex", 'w')
-    content = inFile.readlines()
-    outFile.writelines(content[:line])
-    outFile.write(text)
-    outFile.writelines(content[line:])
-    outFile.close()
-    inFile.close()
-    os.replace(TEX_PATH, TEX_DIR + "~dictionary.tex")
+    parent = QStandardItemModel.parent(self.defView.model(), indices[0])
+    defList = [self.defView.model().itemFromIndex(indices[0]).text()]
+    for i in indices[1:]:
+        defList.append(self.defView.model().itemFromIndex(i).text())
+        if  QStandardItemModel.parent(self.defView.model(), i) != parent:
+            msgBox(self, "Error: cannot select definitions from multiple lexical categories")
+            return
+    return [parent, defList]
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
@@ -52,25 +45,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.searchEdit.returnPressed.connect(self.updateData)
         self.clearButton.pressed.connect(self.clear)
         self.saveButton.pressed.connect(self.save)
-
         self.actionPDF.triggered.connect(self.viewPDF)
 
         self.show()
 
+
     # function to populate proEdit and defView
     def updateData(self):
         word = cleanWord(self.searchEdit.text())
+        if not validateWord(self, word):
+           return
+       
         try:
             data = getData(word)
-        except TypeError:
-            msgBox(self, "Error: word already in dictionary")
-            return
-        except ValueError:
-            msgBox(self, "Error: incorrect spelling")
-            return
-        except requests.exceptions.ConnectionError:
-            msgBox(self, "Error: can't connect to Dictionary.com (check your WiFi)")
-            return
         except Exception as e:
             msgBox(self, "Error:" + str(e))
             return
@@ -98,18 +85,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # function to save definition in LaTeX file
     def save(self):
-        indices = self.defView.selectionModel().selectedIndexes() 
-        if not indices:
-            msgBox(self, "Error: must select at least one definition")
+        word = cleanWord(self.searchEdit.text())
+        if not validateIndices(self) or not validateWord(self, word):
             return
-
-        parent = QStandardItemModel.parent(self.defView.model(), indices[0])
-        defList = [self.defView.model().itemFromIndex(indices[0]).text()]
-        for i in indices[1:]:
-            defList.append(self.defView.model().itemFromIndex(i).text())
-            if  QStandardItemModel.parent(self.defView.model(), i) != parent:
-                msgBox(self, "Error: cannot select definitions from multiple lexical categories")
-                return
+        else:
+            parent = validateIndices(self)[0]
+            defList = validateIndices(self)[1]
 
         word = cleanWord(self.searchEdit.text())
         letter = word[:1]
@@ -136,9 +117,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else: # same letter
                     output = "\n" + output + "\n"
                 count -= 1
-                writeTeX(output, count)
-                # print("Enter at line " + str(count) + ":")
-                # print(output)
                 break
 
             # line is not empty, so continue formatting
@@ -147,7 +125,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if (line[1:6] == "entry"): # if line is an entry
                 currWord = re.split(r"\\entry{|}", line, 3)[1]
                 # if word is between two entries or beginning of nonempty dictionary
-                if (word > prevWord and word < currWord): 
+                if (word > prevWord and word < currWord):
                     # word is last of its letter
                     if (letter  < currWord[:1]):
                         # word is first of its letter, aka new letter
@@ -155,24 +133,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             output = "\n\\section*{" + letter + "}\n\\begin{multicols}{2}\n" + output + "\n\\end{multicols}"
                             count -= 3
                         # last of nonempty set of words beginning with same letter
-                        else: 
+                        else:
                             output = "\n" + output
                             count -= 4
                     # beginning / middle of sets of words beginning with same letter
-                    else: 
+                    else:
                         output += "\n"
                     output += "\n"
-                    writeTeX(output, count)
-                    # print("Enter at line " + str(count))
-                    # print(output)
                     break
                 # word has not been placed
                 else:
                     prevWord = currWord
         file.close()
-
-        if False:
-            os.system("pdflatex -output-directory "  + TEX_DIR + ' ' + TEX_PATH)
+        writeTeX(output, count)
+        os.system("pdflatex -output-directory "  + TEX_DIR + ' ' + TEX_PATH)
 
     # clear all
     def clear(self):
@@ -182,10 +156,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def viewPDF(self):
         if platform.system() == "Windows":
-            os.system("explorer.exe " + PDF_PATH)
+            os.system("start " + PDF_PATH)
+        elif platform.system() == "Darwin":
+            os.system("open " + PDF_PATH)
         elif platform.system() == "Linux":
             os.system("okular " + PDF_PATH + " &")
 
+    
 # driver function which gets called in main.py
 def run():
     app = QApplication(sys.argv)
