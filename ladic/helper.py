@@ -86,5 +86,5 @@ def makePDF():
     system = platform.system()
     if system == "Windows":
         pass
-    else if system == "Linux" or system == "Darwin":
+    elif system == "Linux" or system == "Darwin":
         os.system("pdflatex -output-directory "  + TEX_DIR + ' ' + TEX_PATH)
