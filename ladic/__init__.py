@@ -1,3 +1,3 @@
-from ladic import dict
-from ladic import events
+from ladic import dictionary
+from ladic import app
 from ladic import ui

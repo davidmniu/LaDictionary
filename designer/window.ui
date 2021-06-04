@@ -18,7 +18,7 @@
     <item>
      <widget class="QFrame" name="searchFrame">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -40,7 +40,7 @@
     <item>
      <widget class="QFrame" name="proFrame">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -60,19 +60,16 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="defLabel">
-      <property name="text">
-       <string>Definitions:</string>
+     <widget class="QTreeView" name="defView">
+      <property name="frameShape">
+       <enum>QFrame::VLine</enum>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QTreeView" name="defView"/>
-    </item>
-    <item>
      <widget class="QFrame" name="buttonFrame">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -110,10 +107,16 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionPDF"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPDF">
+   <property name="text">
+    <string>Open PDF</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
