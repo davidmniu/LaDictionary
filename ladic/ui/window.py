@@ -72,7 +72,10 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.actionPDF = QtGui.QAction(MainWindow)
         self.actionPDF.setObjectName("actionPDF")
+        self.actionMove = QtGui.QAction(MainWindow)
+        self.actionMove.setObjectName("actionMove")
         self.menuFile.addAction(self.actionPDF)
+        self.menuFile.addAction(self.actionMove)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -87,3 +90,4 @@ class Ui_MainWindow(object):
         self.saveButton.setText(_translate("MainWindow", "Save"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionPDF.setText(_translate("MainWindow", "Open PDF"))
+        self.actionMove.setText(_translate("MainWindow", "Move"))

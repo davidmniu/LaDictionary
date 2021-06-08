@@ -108,6 +108,7 @@
      <string>File</string>
     </property>
     <addaction name="actionPDF"/>
+    <addaction name="actionMove"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -115,6 +116,11 @@
   <action name="actionPDF">
    <property name="text">
     <string>Open PDF</string>
+   </property>
+  </action>
+  <action name="actionMove">
+   <property name="text">
+    <string>Move</string>
    </property>
   </action>
  </widget>
