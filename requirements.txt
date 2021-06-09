@@ -2,10 +2,14 @@ beautifulsoup4==4.9.3
 bs4==0.0.1
 certifi==2021.5.30
 chardet==4.0.0
+cx-Freeze==6.6
+cx-Logging==3.0
 idna==2.10
+importlib-metadata==4.5.0
 PyQt6==6.1.0
 PyQt6-Qt6==6.1.0
 PyQt6-sip==13.1.0
 requests==2.25.1
 soupsieve==2.2.1
 urllib3==1.26.5
+zipp==3.4.1

@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 import platform
 import re
 import requests
@@ -12,7 +13,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractIte
 from ladic.helper import getData, msgBox, cleanWord, validateWord, writeTeX
 from ladic.ui.window import Ui_MainWindow
 
-from definitions import TEX_PATH, TEX_DIR, PDF_PATH
+from definitions import TEX_PATH, TEX_DIR, PDF_PATH, EXE_ROOT_DIR
 
 def validateIndices(self):
     indices = self.defView.selectionModel().selectedIndexes()
@@ -46,6 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.clearButton.pressed.connect(self.clear)
         self.saveButton.pressed.connect(self.save)
         self.actionPDF.triggered.connect(self.viewPDF)
+        self.actionMove.triggered.connect(self.displayData)
 
         self.show()
 
@@ -156,11 +158,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def viewPDF(self):
         if platform.system() == "Windows":
-            os.system("start " + PDF_PATH)
+            subprocess.call("start " + PDF_PATH, shell=True)
         elif platform.system() == "Darwin":
-            os.system("open " + PDF_PATH)
+            subprocess.call("open " + PDF_PATH, shell=True)
         elif platform.system() == "Linux":
-            os.system("okular " + PDF_PATH + " &")
+            subprocess.call("okular " + PDF_PATH + " &", shell=True)
+
+    def displayData(self):
+        msgBox(self, #"sys.executable " + sys.executable + 
+                #"\nsys.argv[0]: " + sys.argv[0] +
+                #"\nos.path.realpath(sys.executable): " + os.path.realpath(sys.executable) +
+                #"\nos.path.realpath(sys.argv[0]): " + os.path.realpath(sys.argv[0]) +
+                #"\nos.path.dirname(os.path.realpath(sys.executable)):\n\t" + os.path.dirname(os.path.realpath(sys.executable)) +
+                #"\nos.path.dirname(os.path.realpath(sys.argv[0])):\n\t" + os.path.dirname(os.path.realpath(sys.argv[0])) +
+                "\nEXE_ROOT_DIR: " + EXE_ROOT_DIR +
+                "\nos.path.dirname(sys.executable): " + os.path.dirname(sys.executable) +
+                "\nTEX_DIR: " + TEX_DIR +
+                "\nTEX_PATH: " + TEX_PATH +
+                "\nPDF_PATH: " + PDF_PATH
+                )
+        return
 
     
 # driver function which gets called in main.py
