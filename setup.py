@@ -19,7 +19,7 @@ executables = [
 ]
 
 setup(name='ladic',
-      version = '1.0',
+      version = '0.1',
       description = 'LaDictionary',
       options = {'build_exe': build_options},
       executables = executables)
