@@ -20,18 +20,20 @@ This project uses
 ## Installation
 
 ### Windows:
-We'll upload the installer for Windows shortly; in the meantime, you can either run this program via Python itself or create the installer manually. To run with Python, simply clone this repository, open Command Prompt, `cd` into the directory and enter
+You can find a .msi installer over at [https://davidmniu.github.io/LaDictionary/](https://davidmniu.github.io/LaDictionary/). Otherwise, you can either run this program via Python itself or create the installer manually. To run with Python, simply clone this repository, open Command Prompt, `cd` into the directory and enter
 
 ```
-pip install -r requirements.txt && python main.py
+pip install -r requirements.txt
+python main.py
 ```
 
 If you want to create the installer manually, `cd` into the root directory of the project and enter
 
 ```
+pip install -r requirements.txt
 python setup.py bdist_msi
 ```
-upon which you should have a .msi executable installer in the /build/ directory.
+upon which you should have a .msi executable installer in the /dist/ directory.
 
 ### Linux:
 Support for an installer is coming soon! In the meantime, simply clone and `cd` into the repository, then run
