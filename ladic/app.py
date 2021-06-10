@@ -7,13 +7,13 @@ import requests
 
 # from PyQt6 import QtCore, QtGui, QtWidgets
 # from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QStandardItemModel, QStandardItem
+from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractItemView
 
 from ladic.helper import getData, msgBox, cleanWord, validateWord, writeTeX
 from ladic.ui.window import Ui_MainWindow
 
-from definitions import TEX_PATH, TEX_DIR, PDF_PATH, EXE_ROOT_DIR
+from paths import TEX_PATH, TEX_DIR, PDF_PATH, EXE_ROOT_DIR, ROOT_DIR
 
 def validateIndices(self):
     indices = self.defView.selectionModel().selectedIndexes()
@@ -33,6 +33,7 @@ def validateIndices(self):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        self.setWindowIcon(QIcon(os.path.join(ROOT_DIR, "ladic.ico")))
         self.setupUi(self)
 
         # set model for defView

@@ -7,7 +7,12 @@
 - Functionality to delete definitions
 - MacOS and Linux installers (.dmg, .deb, .rpm, etc.)
 
-## Version 0.1.1 - Unreleased
+## Version 0.1.2 - Unreleased
+
+### Added
+- Logs, docs, and/or tests
+
+## Version 0.1.1 - 2021-06-10
 
 ### Fixed
 - removed 'File->Move' button, renamed window header, added 'About' button

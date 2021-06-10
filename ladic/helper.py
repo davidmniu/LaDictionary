@@ -8,7 +8,7 @@ import platform
 
 from PyQt6.QtWidgets import QMessageBox
 
-from definitions import TEX_PATH, TEX_DIR
+from paths import TEX_PATH, TEX_DIR
 
 def getData(word):
     word = cleanWord(word)
