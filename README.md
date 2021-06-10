@@ -20,14 +20,22 @@ This project uses
 ## Installation
 
 ### Windows:
-You can find a .msi installer over at [https://davidmniu.github.io/LaDictionary/](https://davidmniu.github.io/LaDictionary/). Otherwise, you can either run this program via Python itself or create the installer manually. To run with Python, simply clone this repository, open Command Prompt, `cd` into the directory and enter
+You can find a .msi installer over at [https://davidmniu.github.io/LaDictionary/](https://davidmniu.github.io/LaDictionary/). Otherwise, you can either run this program via Python itself or create the installer manually. To run with Python, simply clone this repository, open Command Prompt, `cd` into the directory; I recommend using a virtual environment, although it is not strictly necessary:
+
+```
+python -m venv env
+cd env/Scripts
+activate
+```
+
+Then, `cd` back into the project root directory and enter 
 
 ```
 pip install -r requirements.txt
 python main.py
 ```
 
-If you want to create the installer manually, `cd` into the root directory of the project and enter
+If you want to create the installer manually, enter 
 
 ```
 pip install -r requirements.txt
@@ -36,7 +44,14 @@ python setup.py bdist_msi
 upon which you should have a .msi executable installer in the /dist/ directory.
 
 ### Linux:
-Support for an installer is coming soon! In the meantime, simply clone and `cd` into the repository, then run
+Support for an installer is coming soon! In the meantime, simply clone and `cd` into the repository, create and activate your virtual environment (again, not strictly necessary):
+
+```
+python -m venv env
+source env/bin/activate
+```
+
+and then run
 
 ```
 pip install -r requirements.txt && python main.py
