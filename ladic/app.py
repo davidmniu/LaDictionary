@@ -47,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.clearButton.pressed.connect(self.clear)
         self.saveButton.pressed.connect(self.save)
         self.actionPDF.triggered.connect(self.viewPDF)
-        self.actionMove.triggered.connect(self.displayData)
+        self.actionAbout.triggered.connect(self.openAbout)
 
         self.show()
 
@@ -148,7 +148,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     prevWord = currWord
         file.close()
         writeTeX(output, count)
-        os.system("pdflatex -output-directory "  + TEX_DIR + ' ' + TEX_PATH)
+        subprocess.call("pdflatex -output-directory "  + TEX_DIR + ' ' + TEX_PATH, shell=True)
 
     # clear all
     def clear(self):
@@ -164,22 +164,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif platform.system() == "Linux":
             subprocess.call("okular " + PDF_PATH + " &", shell=True)
 
-    def displayData(self):
-        msgBox(self, #"sys.executable " + sys.executable + 
-                #"\nsys.argv[0]: " + sys.argv[0] +
-                #"\nos.path.realpath(sys.executable): " + os.path.realpath(sys.executable) +
-                #"\nos.path.realpath(sys.argv[0]): " + os.path.realpath(sys.argv[0]) +
-                #"\nos.path.dirname(os.path.realpath(sys.executable)):\n\t" + os.path.dirname(os.path.realpath(sys.executable)) +
-                #"\nos.path.dirname(os.path.realpath(sys.argv[0])):\n\t" + os.path.dirname(os.path.realpath(sys.argv[0])) +
-                "\nEXE_ROOT_DIR: " + EXE_ROOT_DIR +
-                "\nos.path.dirname(sys.executable): " + os.path.dirname(sys.executable) +
-                "\nTEX_DIR: " + TEX_DIR +
-                "\nTEX_PATH: " + TEX_PATH +
-                "\nPDF_PATH: " + PDF_PATH
-                )
-        return
+    def openAbout(self):
+        site = "https://github.com/davidmniu/LaDictionary"
+        if platform.system() == "Windows":
+            subprocess.call("start " + site, shell=True)
+        elif platform.system() == "Darwin":
+            subprocess.call("open " + site, shell=True)
+        elif platform.system() == "Linux":
+            subprocess.call("xdg-open " + site, shell=True)
 
-    
 # driver function which gets called in main.py
 def run():
     app = QApplication(sys.argv)
