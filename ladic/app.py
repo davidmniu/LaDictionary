@@ -10,7 +10,7 @@ import requests
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractItemView
 
-from ladic.helper import getData, msgBox, cleanWord, validateWord, writeTeX
+from ladic.helper import getData, msgBox, cleanWord, validateWord, formatDefi, writeTeX
 from ladic.ui.window import Ui_MainWindow
 
 from paths import TEX_PATH, TEX_DIR, PDF_PATH, EXE_ROOT_DIR, ROOT_DIR
@@ -100,8 +100,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pro = self.proEdit.text().strip()
         output = "\t\\entry{" + word + "}{" + pro + "}{" + self.defView.model().itemFromIndex(parent).text().strip() + "}{"
         for i in defList[0:-1]:
-            output += i.split('.')[1].strip() + "\n\t$\\bullet$\n\t"
-        output += defList[-1].split('.')[1].strip() + '}'
+            output += formatDefi(self, i) + "\n\t$\\bullet$\n\t"
+        output += formatDefi(self, defList[-1]) + '}'
 
         # linear search to find where data should be entered
         file = open(TEX_PATH, "r")

@@ -32,7 +32,10 @@ def getData(word):
         defDict[wordType] = []
         # definitions
         for j in i.select('div[class*="e1q3nk1v2"]'):
-            defDict[wordType].append(re.split(r":|\.", j.text, 3)[0])
+            if ':' in j.text:
+                defDict[wordType].append(re.sub("([\(\[]).*?([\)\]])", "", re.split(r":", j.text, 2)[0]))
+            else:
+                defDict[wordType].append(re.sub("([\(\[]).*?([\)\]])", "", j.text.rsplit(".", 1)[0]))
 
     return [pron, defDict]
 
@@ -69,6 +72,15 @@ def validateWord(self, word):
         return
 
     return True
+
+def formatDefi(self, i):
+    # little function to italicize modifiers at start of definition
+    defi = i.split('.', 1)[1].strip()
+    if defi[0].isupper():
+        output = "\\textit{" + defi.split('.', 1)[0] + '.}' + defi.split('.', 1)[1] 
+    else:
+        output = i.split('.')[1].strip() 
+    return output 
 
 def writeTeX(text, line):
     line -= 1

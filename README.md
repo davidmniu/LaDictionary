@@ -70,3 +70,6 @@ Depending on your LaTeX distribution, you may or may not have all the necessary 
 * fancyhdr
 
 If you are on Linux using TeX Live, you probably know how to get these packages installed.
+
+### Updating
+If you have installed a previous version of LaDic and now want to upgrade with the installer, **save your .tex file in a separate location**, as the installer will overwrite your .tex file with the default .tex file. If you don't do this, **your .tex file will be lost!** This will be fixed in a future update.
